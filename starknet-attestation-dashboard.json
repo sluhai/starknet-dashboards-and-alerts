@@ -101,7 +101,11 @@
                 },
                 "showPercentChange": false,
                 "textMode": "auto",
-                "wideLayout": true
+                "wideLayout": true,
+                "text": {
+                  "titleSize": 14,
+                  "valueSize": 28
+                }
               }
             },
             "version": "13.2.0"
@@ -144,7 +148,7 @@
           "description": "",
           "id": 2001,
           "links": [],
-          "title": "Current Epoch Progress",
+          "title": "Epoch progress",
           "vizConfig": {
             "group": "gauge",
             "kind": "VizConfig",
@@ -416,7 +420,7 @@
           "description": "",
           "id": 2004,
           "links": [],
-          "title": "Attestation Success Rate",
+          "title": "Success rate",
           "vizConfig": {
             "group": "stat",
             "kind": "VizConfig",
@@ -857,7 +861,7 @@
           "description": "",
           "id": 9002,
           "links": [],
-          "title": "Current Epoch ID",
+          "title": "Epoch ID",
           "vizConfig": {
             "group": "stat",
             "kind": "VizConfig",
@@ -938,7 +942,7 @@
           "description": "",
           "id": 9003,
           "links": [],
-          "title": "Epoch Length in Blocks",
+          "title": "Epoch length",
           "vizConfig": {
             "group": "stat",
             "kind": "VizConfig",
@@ -958,88 +962,6 @@
                     ]
                   },
                   "unit": "none"
-                },
-                "overrides": []
-              },
-              "options": {
-                "colorMode": "value",
-                "graphMode": "none",
-                "justifyMode": "auto",
-                "orientation": "auto",
-                "percentChangeColorMode": "standard",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "showPercentChange": false,
-                "textMode": "auto",
-                "wideLayout": true
-              }
-            },
-            "version": "13.2.0"
-          }
-        }
-      },
-      "panel-9006": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${ds}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "increase(validator_attestation_attestation_submitted_count{exported_network=~\"$exported_network\"}[$__range])",
-                        "legendFormat": "{{exported_network}}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "",
-          "id": 9006,
-          "links": [],
-          "title": "Attestations Submitted",
-          "vizConfig": {
-            "group": "stat",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "thresholds"
-                  },
-                  "decimals": 0,
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      }
-                    ]
-                  },
-                  "unit": "short"
                 },
                 "overrides": []
               },
@@ -1147,100 +1069,6 @@
           }
         }
       },
-      "panel-9008": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${ds}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "increase(validator_attestation_attestation_failure_count{exported_network=~\"$exported_network\"}[$__range])",
-                        "legendFormat": "{{exported_network}}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "",
-          "id": 9008,
-          "links": [],
-          "title": "Attestation Failures",
-          "vizConfig": {
-            "group": "stat",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "thresholds"
-                  },
-                  "decimals": 0,
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      },
-                      {
-                        "color": "yellow",
-                        "value": 1
-                      },
-                      {
-                        "color": "orange",
-                        "value": 2
-                      },
-                      {
-                        "color": "red",
-                        "value": 3
-                      }
-                    ]
-                  },
-                  "unit": "short"
-                },
-                "overrides": []
-              },
-              "options": {
-                "colorMode": "value",
-                "graphMode": "none",
-                "justifyMode": "auto",
-                "orientation": "auto",
-                "percentChangeColorMode": "standard",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "showPercentChange": false,
-                "textMode": "auto",
-                "wideLayout": true
-              }
-            },
-            "version": "13.2.0"
-          }
-        }
-      },
       "panel-9010": {
         "kind": "Panel",
         "spec": {
@@ -1277,7 +1105,7 @@
           "description": "",
           "id": 9010,
           "links": [],
-          "title": "Service Status",
+          "title": "Service status",
           "vizConfig": {
             "group": "stat",
             "kind": "VizConfig",
@@ -1371,7 +1199,7 @@
           "description": "",
           "id": 9011,
           "links": [],
-          "title": "Operational Balance (STRK)",
+          "title": "Balance (STRK)",
           "vizConfig": {
             "group": "stat",
             "kind": "VizConfig",
@@ -3182,7 +3010,7 @@
           "description": "Confirmed attestations over confirmed plus missed, across the last week. The delegation program requires 99 percent liveness on both networks, so this is the number that matters for it rather than the daily one.",
           "id": 4009,
           "links": [],
-          "title": "Success rate, 7 days",
+          "title": "Success rate, 7d",
           "vizConfig": {
             "group": "stat",
             "kind": "VizConfig",
@@ -3272,7 +3100,7 @@
           "description": "The same ratio over a month. It becomes meaningful once a month of history has accumulated in the local Prometheus, which starts on 27 August 2026. On a shorter history the ratio itself is still correct - numerator and denominator are computed over the same range - but it covers only the history that exists, not the full 30 days. This panel exists on the local Grafana only: Grafana Cloud keeps 14 days, so a 30-day window is unreachable there.",
           "id": 4010,
           "links": [],
-          "title": "Success rate, 30 days",
+          "title": "Success rate, 30d",
           "vizConfig": {
             "group": "stat",
             "kind": "VizConfig",
@@ -3533,14 +3361,10 @@
               },
               "options": {
                 "legend": {
-                  "calcs": [
-                    "lastNotNull",
-                    "max"
-                  ],
-                  "displayMode": "table",
-                  "placement": "right",
-                  "showLegend": true,
-                  "width": 300
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
                 },
                 "tooltip": {
                   "hideZeros": false,
@@ -3683,7 +3507,7 @@
           "description": "Seconds since the current epoch started, computed from the block count and the block rate measured over the last hour, so no block time is hardwired. Mainnet epochs run about 60 minutes and Sepolia about 6.4. Right after the attestation tool restarts the rate needs a few minutes of history before this reads correctly.",
           "id": 4007,
           "links": [],
-          "title": "Time in current epoch",
+          "title": "Time in epoch",
           "vizConfig": {
             "group": "stat",
             "kind": "VizConfig",
@@ -3769,7 +3593,7 @@
           "description": "Confirmed attestations over confirmed plus missed, across the last 90 days. This is the window the StarkWare delegation program states: 99 percent liveness on mainnet and testnet. Local Prometheus starts on 27 August 2026, so a full 90-day window is only available from late November 2026; before that the panel covers whatever history exists. The ratio itself stays correct on a short window, because numerator and denominator are computed over the same range - only the absolute counts are partial. This panel exists on the local Grafana only: Grafana Cloud keeps 14 days of history, so there it could never read correctly.",
           "id": 4015,
           "links": [],
-          "title": "Success rate, 90 days",
+          "title": "Success rate, 90d",
           "vizConfig": {
             "group": "stat",
             "kind": "VizConfig",
@@ -3859,7 +3683,7 @@
           "description": "Epochs that ended without a confirmed attestation over the last 90 days. This is the count behind the 90-day success rate next to it. Mainnet runs about one epoch an hour, so a 90-day window holds roughly 2160 epochs and the 99 percent floor allows about 21 misses; Sepolia runs about nine times faster and its budget is correspondingly larger, which is why this panel is left uncoloured - one colour scale cannot serve both networks. Same history caveat as the 90-day success rate: local Prometheus starts on 27 August 2026.",
           "id": 4016,
           "links": [],
-          "title": "Missed epochs, 90 days",
+          "title": "Missed epochs, 90d",
           "vizConfig": {
             "group": "stat",
             "kind": "VizConfig",
@@ -3941,7 +3765,7 @@
           "description": "Confirmed attestations over confirmed plus missed, across the last fourteen days. The delegation program requires 99 percent liveness on both networks, so this is the number that matters for it. Fourteen days is the retention of Grafana Cloud on the free plan, which is why this window exists: on a store that keeps only two weeks it is the longest honest window. It sits right at the edge of that retention, so the coverage can fall a few hours short of the full fourteen days; the ratio itself stays correct either way, because numerator and denominator are computed over the same range.",
           "id": 4017,
           "links": [],
-          "title": "Success rate, 14 days",
+          "title": "Success rate, 14d",
           "vizConfig": {
             "group": "stat",
             "kind": "VizConfig",
@@ -4017,7 +3841,7 @@
                         },
                         "x": 0,
                         "y": 0,
-                        "width": 4,
+                        "width": 6,
                         "height": 4
                       }
                     },
@@ -4028,9 +3852,9 @@
                           "kind": "ElementReference",
                           "name": "panel-2004"
                         },
-                        "x": 4,
+                        "x": 6,
                         "y": 0,
-                        "width": 4,
+                        "width": 6,
                         "height": 4
                       }
                     },
@@ -4041,9 +3865,9 @@
                           "kind": "ElementReference",
                           "name": "panel-9011"
                         },
-                        "x": 8,
+                        "x": 12,
                         "y": 0,
-                        "width": 4,
+                        "width": 6,
                         "height": 4
                       }
                     },
@@ -4054,35 +3878,9 @@
                           "kind": "ElementReference",
                           "name": "panel-2001"
                         },
-                        "x": 12,
+                        "x": 18,
                         "y": 0,
-                        "width": 4,
-                        "height": 4
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-9002"
-                        },
-                        "x": 16,
-                        "y": 0,
-                        "width": 4,
-                        "height": 4
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-9003"
-                        },
-                        "x": 20,
-                        "y": 0,
-                        "width": 4,
+                        "width": 6,
                         "height": 4
                       }
                     },
@@ -4095,20 +3893,7 @@
                         },
                         "x": 0,
                         "y": 4,
-                        "width": 8,
-                        "height": 8
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-2007"
-                        },
-                        "x": 8,
-                        "y": 4,
-                        "width": 8,
+                        "width": 12,
                         "height": 8
                       }
                     },
@@ -4119,9 +3904,9 @@
                           "kind": "ElementReference",
                           "name": "panel-2002"
                         },
-                        "x": 16,
+                        "x": 12,
                         "y": 4,
-                        "width": 8,
+                        "width": 12,
                         "height": 4
                       }
                     },
@@ -4132,9 +3917,9 @@
                           "kind": "ElementReference",
                           "name": "panel-2003"
                         },
-                        "x": 16,
+                        "x": 12,
                         "y": 8,
-                        "width": 8,
+                        "width": 12,
                         "height": 4
                       }
                     },
@@ -4147,7 +3932,7 @@
                         },
                         "x": 0,
                         "y": 12,
-                        "width": 9,
+                        "width": 6,
                         "height": 4
                       }
                     },
@@ -4156,11 +3941,11 @@
                       "spec": {
                         "element": {
                           "kind": "ElementReference",
-                          "name": "panel-9008"
+                          "name": "panel-9002"
                         },
-                        "x": 9,
+                        "x": 6,
                         "y": 12,
-                        "width": 5,
+                        "width": 6,
                         "height": 4
                       }
                     },
@@ -4169,11 +3954,11 @@
                       "spec": {
                         "element": {
                           "kind": "ElementReference",
-                          "name": "panel-9006"
+                          "name": "panel-9003"
                         },
-                        "x": 14,
+                        "x": 12,
                         "y": 12,
-                        "width": 5,
+                        "width": 6,
                         "height": 4
                       }
                     },
@@ -4184,9 +3969,9 @@
                           "kind": "ElementReference",
                           "name": "panel-9007"
                         },
-                        "x": 19,
+                        "x": 18,
                         "y": 12,
-                        "width": 5,
+                        "width": 6,
                         "height": 4
                       }
                     }
@@ -4214,7 +3999,7 @@
                         "x": 0,
                         "y": 0,
                         "width": 12,
-                        "height": 8
+                        "height": 6
                       }
                     },
                     {
@@ -4227,7 +4012,7 @@
                         "x": 12,
                         "y": 0,
                         "width": 6,
-                        "height": 4
+                        "height": 6
                       }
                     },
                     {
@@ -4240,7 +4025,20 @@
                         "x": 18,
                         "y": 0,
                         "width": 6,
-                        "height": 4
+                        "height": 6
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-2007"
+                        },
+                        "x": 0,
+                        "y": 6,
+                        "width": 16,
+                        "height": 5
                       }
                     },
                     {
@@ -4250,10 +4048,10 @@
                           "kind": "ElementReference",
                           "name": "panel-3004"
                         },
-                        "x": 12,
-                        "y": 4,
-                        "width": 12,
-                        "height": 4
+                        "x": 16,
+                        "y": 6,
+                        "width": 8,
+                        "height": 5
                       }
                     }
                   ]
@@ -4384,8 +4182,8 @@
                         },
                         "x": 0,
                         "y": 7,
-                        "width": 16,
-                        "height": 6
+                        "width": 12,
+                        "height": 5
                       }
                     },
                     {
@@ -4395,10 +4193,10 @@
                           "kind": "ElementReference",
                           "name": "panel-4004"
                         },
-                        "x": 16,
+                        "x": 12,
                         "y": 7,
-                        "width": 8,
-                        "height": 6
+                        "width": 12,
+                        "height": 5
                       }
                     }
                   ]
@@ -4425,7 +4223,7 @@
                         "x": 0,
                         "y": 0,
                         "width": 12,
-                        "height": 8
+                        "height": 6
                       }
                     },
                     {
@@ -4438,7 +4236,7 @@
                         "x": 12,
                         "y": 0,
                         "width": 6,
-                        "height": 4
+                        "height": 3
                       }
                     },
                     {
@@ -4451,7 +4249,7 @@
                         "x": 18,
                         "y": 0,
                         "width": 6,
-                        "height": 4
+                        "height": 3
                       }
                     },
                     {
@@ -4462,9 +4260,9 @@
                           "name": "panel-4013"
                         },
                         "x": 12,
-                        "y": 4,
+                        "y": 3,
                         "width": 12,
-                        "height": 4
+                        "height": 3
                       }
                     }
                   ]
@@ -4491,7 +4289,7 @@
                         "x": 0,
                         "y": 0,
                         "width": 12,
-                        "height": 8
+                        "height": 7
                       }
                     },
                     {
@@ -4504,7 +4302,7 @@
                         "x": 12,
                         "y": 0,
                         "width": 12,
-                        "height": 8
+                        "height": 7
                       }
                     },
                     {
@@ -4515,9 +4313,9 @@
                           "name": "panel-3007"
                         },
                         "x": 0,
-                        "y": 8,
+                        "y": 7,
                         "width": 10,
-                        "height": 6
+                        "height": 5
                       }
                     },
                     {
@@ -4528,9 +4326,9 @@
                           "name": "panel-3008"
                         },
                         "x": 10,
-                        "y": 8,
+                        "y": 7,
                         "width": 10,
-                        "height": 6
+                        "height": 5
                       }
                     },
                     {
@@ -4541,9 +4339,9 @@
                           "name": "panel-4007"
                         },
                         "x": 20,
-                        "y": 8,
+                        "y": 7,
                         "width": 4,
-                        "height": 6
+                        "height": 5
                       }
                     }
                   ]
@@ -4569,8 +4367,8 @@
                         },
                         "x": 0,
                         "y": 0,
-                        "width": 24,
-                        "height": 7
+                        "width": 12,
+                        "height": 5
                       }
                     },
                     {
@@ -4580,10 +4378,10 @@
                           "kind": "ElementReference",
                           "name": "panel-3015"
                         },
-                        "x": 0,
-                        "y": 7,
-                        "width": 12,
-                        "height": 4
+                        "x": 12,
+                        "y": 0,
+                        "width": 6,
+                        "height": 5
                       }
                     },
                     {
@@ -4593,10 +4391,10 @@
                           "kind": "ElementReference",
                           "name": "panel-4011"
                         },
-                        "x": 12,
-                        "y": 7,
-                        "width": 12,
-                        "height": 4
+                        "x": 18,
+                        "y": 0,
+                        "width": 6,
+                        "height": 5
                       }
                     }
                   ]
