@@ -6,7 +6,7 @@ and the [pathfinder](https://github.com/eqlabs/pathfinder) node behind it.
 
 | File | What it is |
 | --- | --- |
-| `starknet-attestation-dashboard.json` | Attestation dashboard. Eight rows, only the top one open. |
+| `starknet-attestation-dashboard.json` | Attestation dashboard. Seven rows, only the top one open. |
 | `starknet-node-dashboard.json` | Pathfinder node health. Five rows, only `Status` open. |
 | `attestation-monitoring.yaml` | 22 alert rules, Grafana provisioning format. |
 
@@ -43,9 +43,6 @@ attestation tool uses the label `exported_network` with `SN_MAIN` and `SN_SEPOLI
 label at all, and there the network is the scrape port inside `instance`, `:9000` for mainnet and `:9001`
 for testnet. One value covers all of them: `Sepolia` is `SN_SEPOLIA|testnet-sepolia` in the attestation
 dashboard and `testnet-sepolia|.*9001` in the node dashboard.
-
-Two panels ignore the selector on purpose. `SN_MAIN Attestations` and `SN_SEPOLIA Attestations` are each
-pinned to one network, so one of them is empty unless `Both` is selected.
 
 To add a third network, edit the variable by hand — it is a fixed list, not a query.
 
