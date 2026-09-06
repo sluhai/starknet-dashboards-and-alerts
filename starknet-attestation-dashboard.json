@@ -491,8 +491,8 @@
                       "kind": "DataQuery",
                       "spec": {
                         "editorMode": "code",
-                        "expr": "validator_attestation_attestation_submitted_count{exported_network=~\"$exported_network\", exported_network=\"SN_MAIN\"}",
-                        "legendFormat": "Submitted",
+                        "expr": "validator_attestation_attestation_submitted_count{exported_network=~\"$exported_network\"}",
+                        "legendFormat": "{{exported_network}} submitted",
                         "range": true
                       },
                       "version": "v0"
@@ -512,13 +512,34 @@
                       "kind": "DataQuery",
                       "spec": {
                         "editorMode": "code",
-                        "expr": "validator_attestation_attestation_confirmed_count{exported_network=~\"$exported_network\", exported_network=\"SN_MAIN\"}",
-                        "legendFormat": "Confirmed",
+                        "expr": "validator_attestation_attestation_confirmed_count{exported_network=~\"$exported_network\"}",
+                        "legendFormat": "{{exported_network}} confirmed",
                         "range": true
                       },
                       "version": "v0"
                     },
                     "refId": "B"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "${ds}"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "validator_attestation_attestation_confirmations_observed_count{exported_network=~\"$exported_network\"}",
+                        "legendFormat": "{{exported_network}} observed",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "C"
                   }
                 }
               ],
@@ -526,10 +547,10 @@
               "transformations": []
             }
           },
-          "description": "Cumulative counters for SN_MAIN only. The mainnet epoch is about one hour, so this line grows slowly. A drop to zero means the attestation tool was restarted.",
+          "description": "The three cumulative counters the attestation tool keeps, one set of lines per selected network. Submitted is what left the tool, confirmed is what the chain accepted, observed is the confirmations the tool saw. All three should sit on top of each other; the panel exists to catch them separating. What observed counts beyond confirmed has not been established - over a 12-hour window on 30 August 2026 the two matched exactly, 12 and 12 on mainnet, 111 and 111 on Sepolia. A gap of one or two out of several hundred is invisible here; the panel Submitted minus confirmed in Diagnostics shows that gap directly. A drop to zero means the attestation tool was restarted - the counters start again, the attestations themselves are not lost. The mainnet epoch is about an hour and the Sepolia epoch about six minutes, so the Sepolia lines climb roughly nine times faster.",
           "id": 2005,
           "links": [],
-          "title": "SN_MAIN Attestations",
+          "title": "Attestations submitted, confirmed and observed",
           "vizConfig": {
             "group": "timeseries",
             "kind": "VizConfig",
@@ -585,202 +606,7 @@
                   },
                   "unit": "short"
                 },
-                "overrides": [
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "options": "Submitted"
-                    },
-                    "properties": [
-                      {
-                        "id": "color",
-                        "value": {
-                          "fixedColor": "yellow",
-                          "mode": "fixed"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "options": "Confirmed"
-                    },
-                    "properties": [
-                      {
-                        "id": "color",
-                        "value": {
-                          "fixedColor": "green",
-                          "mode": "fixed"
-                        }
-                      }
-                    ]
-                  }
-                ]
-              },
-              "options": {
-                "legend": {
-                  "calcs": [],
-                  "displayMode": "list",
-                  "placement": "bottom",
-                  "showLegend": true
-                },
-                "tooltip": {
-                  "hideZeros": false,
-                  "mode": "multi",
-                  "sort": "none"
-                }
-              }
-            },
-            "version": "13.2.0"
-          }
-        }
-      },
-      "panel-2006": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${ds}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "validator_attestation_attestation_submitted_count{exported_network=~\"$exported_network\", exported_network=\"SN_SEPOLIA\"}",
-                        "legendFormat": "Submitted",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                },
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${ds}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "validator_attestation_attestation_confirmed_count{exported_network=~\"$exported_network\", exported_network=\"SN_SEPOLIA\"}",
-                        "legendFormat": "Confirmed",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "B"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Cumulative counters for SN_SEPOLIA only. The Sepolia epoch is about six minutes, so this line grows roughly nine times faster than the mainnet one. A drop to zero means the attestation tool was restarted.",
-          "id": 2006,
-          "links": [],
-          "title": "SN_SEPOLIA Attestations",
-          "vizConfig": {
-            "group": "timeseries",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "palette-classic"
-                  },
-                  "custom": {
-                    "axisBorderShow": false,
-                    "axisCenteredZero": false,
-                    "axisColorMode": "text",
-                    "axisLabel": "",
-                    "axisPlacement": "auto",
-                    "barAlignment": 0,
-                    "barWidthFactor": 0.6,
-                    "drawStyle": "line",
-                    "fillOpacity": 8,
-                    "gradientMode": "none",
-                    "hideFrom": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": false
-                    },
-                    "insertNulls": false,
-                    "lineInterpolation": "linear",
-                    "lineWidth": 2,
-                    "pointSize": 5,
-                    "scaleDistribution": {
-                      "type": "linear"
-                    },
-                    "showPoints": "never",
-                    "showValues": false,
-                    "spanNulls": false,
-                    "stacking": {
-                      "group": "A",
-                      "mode": "none"
-                    },
-                    "thresholdsStyle": {
-                      "mode": "off"
-                    }
-                  },
-                  "decimals": 0,
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      }
-                    ]
-                  },
-                  "unit": "short"
-                },
-                "overrides": [
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "options": "Submitted"
-                    },
-                    "properties": [
-                      {
-                        "id": "color",
-                        "value": {
-                          "fixedColor": "dark-yellow",
-                          "mode": "fixed"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "matcher": {
-                      "id": "byName",
-                      "options": "Confirmed"
-                    },
-                    "properties": [
-                      {
-                        "id": "color",
-                        "value": {
-                          "fixedColor": "dark-green",
-                          "mode": "fixed"
-                        }
-                      }
-                    ]
-                  }
-                ]
+                "overrides": []
               },
               "options": {
                 "legend": {
@@ -995,87 +821,6 @@
           }
         }
       },
-      "panel-9001": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${ds}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "validator_attestation_current_epoch_starting_block_number{exported_network=~\"$exported_network\"}",
-                        "legendFormat": "{{exported_network}}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "",
-          "id": 9001,
-          "links": [],
-          "title": "Epoch Start Block",
-          "vizConfig": {
-            "group": "stat",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "thresholds"
-                  },
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      }
-                    ]
-                  },
-                  "unit": "none"
-                },
-                "overrides": []
-              },
-              "options": {
-                "colorMode": "value",
-                "graphMode": "none",
-                "justifyMode": "auto",
-                "orientation": "auto",
-                "percentChangeColorMode": "standard",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "showPercentChange": false,
-                "textMode": "auto",
-                "wideLayout": true
-              }
-            },
-            "version": "13.2.0"
-          }
-        }
-      },
       "panel-9002": {
         "kind": "Panel",
         "spec": {
@@ -1194,87 +939,6 @@
           "id": 9003,
           "links": [],
           "title": "Epoch Length in Blocks",
-          "vizConfig": {
-            "group": "stat",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "thresholds"
-                  },
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      }
-                    ]
-                  },
-                  "unit": "none"
-                },
-                "overrides": []
-              },
-              "options": {
-                "colorMode": "value",
-                "graphMode": "none",
-                "justifyMode": "auto",
-                "orientation": "auto",
-                "percentChangeColorMode": "standard",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "showPercentChange": false,
-                "textMode": "auto",
-                "wideLayout": true
-              }
-            },
-            "version": "13.2.0"
-          }
-        }
-      },
-      "panel-9004": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${ds}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "validator_attestation_current_epoch_assigned_block_number{exported_network=~\"$exported_network\"}",
-                        "legendFormat": "{{exported_network}}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "",
-          "id": 9004,
-          "links": [],
-          "title": "Assigned Block",
           "vizConfig": {
             "group": "stat",
             "kind": "VizConfig",
@@ -2015,92 +1679,6 @@
           }
         }
       },
-      "panel-3003": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${ds}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "validator_attestation_current_epoch_id{exported_network=~\"$exported_network\"} - (validator_attestation_current_epoch_id{exported_network=~\"$exported_network\"} offset 24h)",
-                        "legendFormat": "{{exported_network}}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "How many epochs the network went through in the last day, taken as the growth of the epoch id. Mainnet sits near 24 and Sepolia near 224; a number far from those means the chain itself changed pace. Compare with confirmed attestations over the same day: they should match.",
-          "id": 3003,
-          "links": [],
-          "title": "Epochs completed, 24h",
-          "vizConfig": {
-            "group": "stat",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "thresholds"
-                  },
-                  "decimals": 0,
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "text",
-                        "value": 0
-                      }
-                    ]
-                  },
-                  "unit": "short"
-                },
-                "overrides": []
-              },
-              "options": {
-                "colorMode": "value",
-                "graphMode": "none",
-                "justifyMode": "auto",
-                "orientation": "auto",
-                "percentChangeColorMode": "standard",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "showPercentChange": false,
-                "text": {
-                  "titleSize": 14,
-                  "valueSize": 32
-                },
-                "textMode": "auto",
-                "wideLayout": true
-              }
-            },
-            "version": "13.2.0"
-          }
-        }
-      },
       "panel-3004": {
         "kind": "Panel",
         "spec": {
@@ -2214,7 +1792,7 @@
                       "kind": "DataQuery",
                       "spec": {
                         "editorMode": "code",
-                        "expr": "(time() - clamp_min(validator_attestation_last_attestation_timestamp_seconds{exported_network=~\"$exported_network\"}, 1))\n/ (2 * validator_attestation_current_epoch_length{exported_network=~\"$exported_network\"} / rate(validator_attestation_starknet_latest_block_number{exported_network=~\"$exported_network\"}[1h]))",
+                        "expr": "(time() - clamp_min(validator_attestation_last_attestation_timestamp_seconds{exported_network=~\"$exported_network\"}, 1))\n/ (2 * validator_attestation_current_epoch_length{exported_network=~\"$exported_network\"} / rate(validator_attestation_starknet_latest_block_number{exported_network=~\"$exported_network\"}[1h]))\n< 10000",
                         "legendFormat": "{{exported_network}}",
                         "range": true
                       },
@@ -2228,7 +1806,7 @@
               "transformations": []
             }
           },
-          "description": "Time since the last confirmed attestation, divided by two epoch lengths. The Delay alert fires at 1.0, so this panel shows how much headroom is left. Normal teeth reach 0.85 to 0.92, which means the margin is under ten percent and a single slow epoch can produce a warning without any epoch being lost. Epoch length in seconds is not a constant here: it is the length in blocks divided by the block rate measured over the last hour from the chain head, so the panel follows the network if it changes pace. Right after the attestation tool restarts the rate needs a few minutes of history before this reads correctly.",
+          "description": "Time since the last confirmed attestation, divided by two epoch lengths. The Delay alert fires at 1.0, so this panel shows how much headroom is left. Normal teeth reach 0.85 to 0.92, which means the margin is under ten percent and a single slow epoch can produce a warning without any epoch being lost. Epoch length in seconds is not a constant here: it is the length in blocks divided by the block rate measured over the last hour from the chain head, so the panel follows the network if it changes pace. Right after the attestation tool restarts the rate needs a few minutes of history before this reads correctly. Values above 10000 are dropped: before the first attestation of a fresh tool the timestamp metric is zero, and the expression would otherwise draw a spike of millions.",
           "id": 3005,
           "links": [],
           "title": "Delay in units of two epochs",
@@ -2737,100 +2315,6 @@
           }
         }
       },
-      "panel-3011": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${ds}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "clamp_max(validator_attestation_operational_account_balance_strk{exported_network=~\"$exported_network\"} / clamp_min(((validator_attestation_operational_account_balance_strk{exported_network=~\"$exported_network\"} offset 24h) - validator_attestation_operational_account_balance_strk{exported_network=~\"$exported_network\"}), 0.01), 9999)",
-                        "legendFormat": "{{exported_network}}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Current balance divided by the last day of spending. A rough figure, and it moves whenever spending does; it answers 'is this months away or days away', nothing finer. Capped at 9999 when spending is near zero.",
-          "id": 3011,
-          "links": [],
-          "title": "Days until empty at current rate",
-          "vizConfig": {
-            "group": "stat",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "thresholds"
-                  },
-                  "decimals": 0,
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "red",
-                        "value": 0
-                      },
-                      {
-                        "color": "orange",
-                        "value": 30
-                      },
-                      {
-                        "color": "green",
-                        "value": 90
-                      }
-                    ]
-                  },
-                  "unit": "d"
-                },
-                "overrides": []
-              },
-              "options": {
-                "colorMode": "value",
-                "graphMode": "none",
-                "justifyMode": "auto",
-                "orientation": "auto",
-                "percentChangeColorMode": "standard",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "showPercentChange": false,
-                "text": {
-                  "titleSize": 14,
-                  "valueSize": 32
-                },
-                "textMode": "auto",
-                "wideLayout": true
-              }
-            },
-            "version": "13.2.0"
-          }
-        }
-      },
       "panel-3012": {
         "kind": "Panel",
         "spec": {
@@ -3030,143 +2514,6 @@
           }
         }
       },
-      "panel-3014": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${ds}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "validator_attestation_attestation_confirmed_count{exported_network=~\"$exported_network\"}",
-                        "legendFormat": "confirmed {{exported_network}}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                },
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${ds}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "validator_attestation_attestation_confirmations_observed_count{exported_network=~\"$exported_network\"}",
-                        "legendFormat": "observed {{exported_network}}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "B"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Two counters the tool keeps: attestations it confirmed as its own, and confirmations it observed. Over a 12-hour window on 30 August they matched exactly, 12 and 12 on mainnet and 111 and 111 on Sepolia, so on that window the second carried no new information. What it counts beyond that has not been established; the panel exists to catch the two lines separating, which would be the first evidence either way.",
-          "id": 3014,
-          "links": [],
-          "title": "Confirmations observed against confirmed",
-          "vizConfig": {
-            "group": "timeseries",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "palette-classic"
-                  },
-                  "custom": {
-                    "axisBorderShow": false,
-                    "axisCenteredZero": false,
-                    "axisColorMode": "text",
-                    "axisLabel": "",
-                    "axisPlacement": "auto",
-                    "barAlignment": 0,
-                    "barWidthFactor": 0.6,
-                    "drawStyle": "line",
-                    "fillOpacity": 8,
-                    "gradientMode": "none",
-                    "hideFrom": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": false
-                    },
-                    "insertNulls": false,
-                    "lineInterpolation": "linear",
-                    "lineWidth": 2,
-                    "pointSize": 6,
-                    "scaleDistribution": {
-                      "type": "linear"
-                    },
-                    "showPoints": "never",
-                    "showValues": false,
-                    "spanNulls": false,
-                    "stacking": {
-                      "group": "A",
-                      "mode": "none"
-                    },
-                    "thresholdsStyle": {
-                      "mode": "off"
-                    }
-                  },
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      }
-                    ]
-                  },
-                  "unit": "short",
-                  "decimals": 0
-                },
-                "overrides": []
-              },
-              "options": {
-                "legend": {
-                  "calcs": [
-                    "lastNotNull",
-                    "max"
-                  ],
-                  "displayMode": "table",
-                  "placement": "right",
-                  "showLegend": true,
-                  "width": 300
-                },
-                "tooltip": {
-                  "hideZeros": false,
-                  "mode": "multi",
-                  "sort": "desc"
-                }
-              }
-            },
-            "version": "13.2.0"
-          }
-        }
-      },
       "panel-3015": {
         "kind": "Panel",
         "spec": {
@@ -3224,182 +2571,6 @@
                       {
                         "color": "orange",
                         "value": 1
-                      }
-                    ]
-                  },
-                  "unit": "short"
-                },
-                "overrides": []
-              },
-              "options": {
-                "colorMode": "value",
-                "graphMode": "none",
-                "justifyMode": "auto",
-                "orientation": "auto",
-                "percentChangeColorMode": "standard",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "showPercentChange": false,
-                "text": {
-                  "titleSize": 14,
-                  "valueSize": 32
-                },
-                "textMode": "auto",
-                "wideLayout": true
-              }
-            },
-            "version": "13.2.0"
-          }
-        }
-      },
-      "panel-3016": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${ds}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "increase(validator_attestation_attestation_failure_count{exported_network=~\"$exported_network\"}[24h])",
-                        "legendFormat": "{{exported_network}}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Raw count of failed attempts, not of lost epochs. One missed epoch produces about thirty of these, because the tool retries every 50 milliseconds until the window closes. Read it together with missed epochs: a large number here with zero missed epochs means retries that eventually succeeded.",
-          "id": 3016,
-          "links": [],
-          "title": "Failed submission attempts, 24h",
-          "vizConfig": {
-            "group": "stat",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "thresholds"
-                  },
-                  "decimals": 0,
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      },
-                      {
-                        "color": "orange",
-                        "value": 1
-                      }
-                    ]
-                  },
-                  "unit": "short"
-                },
-                "overrides": []
-              },
-              "options": {
-                "colorMode": "value",
-                "graphMode": "none",
-                "justifyMode": "auto",
-                "orientation": "auto",
-                "percentChangeColorMode": "standard",
-                "reduceOptions": {
-                  "calcs": [
-                    "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-                },
-                "showPercentChange": false,
-                "text": {
-                  "titleSize": 14,
-                  "valueSize": 32
-                },
-                "textMode": "auto",
-                "wideLayout": true
-              }
-            },
-            "version": "13.2.0"
-          }
-        }
-      },
-      "panel-3017": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${ds}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "increase(validator_attestation_attestation_confirmed_count{exported_network=~\"$exported_network\"}[24h])",
-                        "legendFormat": "{{exported_network}}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Confirmed attestations in the last day. Expect about 24 on mainnet and about 224 on Sepolia; a number well below that, with epochs completed at its normal value, means epochs went by without an attestation.",
-          "id": 3017,
-          "links": [],
-          "title": "Attestations confirmed, 24h",
-          "vizConfig": {
-            "group": "stat",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "thresholds"
-                  },
-                  "decimals": 0,
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "text",
-                        "value": 0
                       }
                     ]
                   },
@@ -4476,232 +3647,6 @@
           }
         }
       },
-      "panel-4005": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${ds}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "validator_attestation_current_epoch_assigned_block_number{exported_network=~\"$exported_network\"} - validator_attestation_starknet_latest_block_number{exported_network=~\"$exported_network\"}",
-                        "legendFormat": "{{exported_network}}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "Blocks between the head of the chain and the block this validator must attest. It counts down through the epoch, crosses zero at the assigned block and goes negative afterwards until the next epoch resets it. The top row shows the same value as a number.",
-          "id": 4005,
-          "links": [],
-          "title": "Blocks until attestation",
-          "vizConfig": {
-            "group": "timeseries",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "palette-classic"
-                  },
-                  "custom": {
-                    "axisBorderShow": false,
-                    "axisCenteredZero": false,
-                    "axisColorMode": "text",
-                    "axisLabel": "",
-                    "axisPlacement": "auto",
-                    "barAlignment": 0,
-                    "barWidthFactor": 0.6,
-                    "drawStyle": "line",
-                    "fillOpacity": 8,
-                    "gradientMode": "none",
-                    "hideFrom": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": false
-                    },
-                    "insertNulls": false,
-                    "lineInterpolation": "linear",
-                    "lineWidth": 2,
-                    "pointSize": 6,
-                    "scaleDistribution": {
-                      "type": "linear"
-                    },
-                    "showPoints": "never",
-                    "showValues": false,
-                    "spanNulls": false,
-                    "stacking": {
-                      "group": "A",
-                      "mode": "none"
-                    },
-                    "thresholdsStyle": {
-                      "mode": "off"
-                    }
-                  },
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      }
-                    ]
-                  },
-                  "unit": "short",
-                  "decimals": 0
-                },
-                "overrides": []
-              },
-              "options": {
-                "legend": {
-                  "calcs": [],
-                  "displayMode": "list",
-                  "placement": "bottom",
-                  "showLegend": true
-                },
-                "tooltip": {
-                  "hideZeros": false,
-                  "mode": "multi",
-                  "sort": "desc"
-                }
-              }
-            },
-            "version": "13.2.0"
-          }
-        }
-      },
-      "panel-4006": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${ds}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "((validator_attestation_starknet_latest_block_number{exported_network=~\"$exported_network\"} - validator_attestation_current_epoch_starting_block_number{exported_network=~\"$exported_network\"}) / validator_attestation_current_epoch_length{exported_network=~\"$exported_network\"}) * 100",
-                        "legendFormat": "{{exported_network}}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "How far the current epoch has advanced, as a percentage. A clean sawtooth from 0 to 100. A tooth that stops climbing means the node stopped reporting new blocks; a tooth that resets early means the network changed epoch sooner than the previous length implied.",
-          "id": 4006,
-          "links": [],
-          "title": "Epoch progress over time",
-          "vizConfig": {
-            "group": "timeseries",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "palette-classic"
-                  },
-                  "custom": {
-                    "axisBorderShow": false,
-                    "axisCenteredZero": false,
-                    "axisColorMode": "text",
-                    "axisLabel": "",
-                    "axisPlacement": "auto",
-                    "barAlignment": 0,
-                    "barWidthFactor": 0.6,
-                    "drawStyle": "line",
-                    "fillOpacity": 8,
-                    "gradientMode": "none",
-                    "hideFrom": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": false
-                    },
-                    "insertNulls": false,
-                    "lineInterpolation": "linear",
-                    "lineWidth": 2,
-                    "pointSize": 6,
-                    "scaleDistribution": {
-                      "type": "linear"
-                    },
-                    "showPoints": "never",
-                    "showValues": false,
-                    "spanNulls": false,
-                    "stacking": {
-                      "group": "A",
-                      "mode": "none"
-                    },
-                    "thresholdsStyle": {
-                      "mode": "off"
-                    }
-                  },
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      }
-                    ]
-                  },
-                  "unit": "percent",
-                  "decimals": 0,
-                  "min": 0,
-                  "max": 100
-                },
-                "overrides": []
-              },
-              "options": {
-                "legend": {
-                  "calcs": [],
-                  "displayMode": "list",
-                  "placement": "bottom",
-                  "showLegend": true
-                },
-                "tooltip": {
-                  "hideZeros": false,
-                  "mode": "multi",
-                  "sort": "desc"
-                }
-              }
-            },
-            "version": "13.2.0"
-          }
-        }
-      },
       "panel-4007": {
         "kind": "Panel",
         "spec": {
@@ -4782,118 +3727,6 @@
                 },
                 "textMode": "auto",
                 "wideLayout": true
-              }
-            },
-            "version": "13.2.0"
-          }
-        }
-      },
-      "panel-4008": {
-        "kind": "Panel",
-        "spec": {
-          "data": {
-            "kind": "QueryGroup",
-            "spec": {
-              "queries": [
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "hidden": false,
-                    "query": {
-                      "datasource": {
-                        "name": "${ds}"
-                      },
-                      "group": "prometheus",
-                      "kind": "DataQuery",
-                      "spec": {
-                        "editorMode": "code",
-                        "expr": "validator_attestation_current_epoch_id{exported_network=~\"$exported_network\"}",
-                        "legendFormat": "{{exported_network}}",
-                        "range": true
-                      },
-                      "version": "v0"
-                    },
-                    "refId": "A"
-                  }
-                }
-              ],
-              "queryOptions": {},
-              "transformations": []
-            }
-          },
-          "description": "The epoch number as the network reports it, drawn as a staircase. Every step should be exactly one. A step of two or more means an epoch went by without this validator seeing it, which is a different fault from a missed attestation and would point at the tool losing contact with the chain.",
-          "id": 4008,
-          "links": [],
-          "title": "Epoch id over time",
-          "vizConfig": {
-            "group": "timeseries",
-            "kind": "VizConfig",
-            "spec": {
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "palette-classic"
-                  },
-                  "custom": {
-                    "axisBorderShow": false,
-                    "axisCenteredZero": false,
-                    "axisColorMode": "text",
-                    "axisLabel": "",
-                    "axisPlacement": "auto",
-                    "barAlignment": 0,
-                    "barWidthFactor": 0.6,
-                    "drawStyle": "line",
-                    "fillOpacity": 8,
-                    "gradientMode": "none",
-                    "hideFrom": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": false
-                    },
-                    "insertNulls": false,
-                    "lineInterpolation": "linear",
-                    "lineWidth": 1,
-                    "pointSize": 6,
-                    "scaleDistribution": {
-                      "type": "linear"
-                    },
-                    "showPoints": "never",
-                    "showValues": false,
-                    "spanNulls": false,
-                    "stacking": {
-                      "group": "A",
-                      "mode": "none"
-                    },
-                    "thresholdsStyle": {
-                      "mode": "off"
-                    }
-                  },
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": 0
-                      }
-                    ]
-                  },
-                  "unit": "short",
-                  "decimals": 0
-                },
-                "overrides": []
-              },
-              "options": {
-                "legend": {
-                  "calcs": [],
-                  "displayMode": "list",
-                  "placement": "bottom",
-                  "showLegend": true
-                },
-                "tooltip": {
-                  "hideZeros": false,
-                  "mode": "multi",
-                  "sort": "desc"
-                }
               }
             },
             "version": "13.2.0"
@@ -5180,64 +4013,12 @@
                       "spec": {
                         "element": {
                           "kind": "ElementReference",
-                          "name": "panel-9003"
-                        },
-                        "height": 4,
-                        "width": 4,
-                        "x": 0,
-                        "y": 0
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-9002"
-                        },
-                        "height": 4,
-                        "width": 4,
-                        "x": 4,
-                        "y": 0
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-2001"
-                        },
-                        "height": 4,
-                        "width": 4,
-                        "x": 8,
-                        "y": 0
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-9011"
-                        },
-                        "height": 4,
-                        "width": 4,
-                        "x": 12,
-                        "y": 0
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
                           "name": "panel-9010"
                         },
-                        "height": 4,
+                        "x": 0,
+                        "y": 0,
                         "width": 4,
-                        "x": 16,
-                        "y": 0
+                        "height": 4
                       }
                     },
                     {
@@ -5247,10 +4028,62 @@
                           "kind": "ElementReference",
                           "name": "panel-2004"
                         },
-                        "height": 4,
+                        "x": 4,
+                        "y": 0,
                         "width": 4,
+                        "height": 4
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-9011"
+                        },
+                        "x": 8,
+                        "y": 0,
+                        "width": 4,
+                        "height": 4
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-2001"
+                        },
+                        "x": 12,
+                        "y": 0,
+                        "width": 4,
+                        "height": 4
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-9002"
+                        },
+                        "x": 16,
+                        "y": 0,
+                        "width": 4,
+                        "height": 4
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-9003"
+                        },
                         "x": 20,
-                        "y": 0
+                        "y": 0,
+                        "width": 4,
+                        "height": 4
                       }
                     },
                     {
@@ -5260,23 +4093,10 @@
                           "kind": "ElementReference",
                           "name": "panel-2005"
                         },
-                        "height": 8,
-                        "width": 5,
                         "x": 0,
-                        "y": 4
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-2006"
-                        },
-                        "height": 8,
-                        "width": 5,
-                        "x": 5,
-                        "y": 4
+                        "y": 4,
+                        "width": 8,
+                        "height": 8
                       }
                     },
                     {
@@ -5286,10 +4106,10 @@
                           "kind": "ElementReference",
                           "name": "panel-2007"
                         },
-                        "height": 8,
-                        "width": 6,
-                        "x": 10,
-                        "y": 4
+                        "x": 8,
+                        "y": 4,
+                        "width": 8,
+                        "height": 8
                       }
                     },
                     {
@@ -5299,10 +4119,10 @@
                           "kind": "ElementReference",
                           "name": "panel-2002"
                         },
-                        "height": 4,
-                        "width": 8,
                         "x": 16,
-                        "y": 4
+                        "y": 4,
+                        "width": 8,
+                        "height": 4
                       }
                     },
                     {
@@ -5312,36 +4132,10 @@
                           "kind": "ElementReference",
                           "name": "panel-2003"
                         },
-                        "height": 4,
-                        "width": 8,
                         "x": 16,
-                        "y": 8
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-9001"
-                        },
-                        "height": 3,
-                        "width": 4,
-                        "x": 0,
-                        "y": 12
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-9004"
-                        },
-                        "height": 3,
-                        "width": 4,
-                        "x": 4,
-                        "y": 12
+                        "y": 8,
+                        "width": 8,
+                        "height": 4
                       }
                     },
                     {
@@ -5351,10 +4145,10 @@
                           "kind": "ElementReference",
                           "name": "panel-1"
                         },
-                        "height": 3,
-                        "width": 4,
-                        "x": 8,
-                        "y": 12
+                        "x": 0,
+                        "y": 12,
+                        "width": 9,
+                        "height": 4
                       }
                     },
                     {
@@ -5364,10 +4158,10 @@
                           "kind": "ElementReference",
                           "name": "panel-9008"
                         },
-                        "height": 3,
-                        "width": 4,
-                        "x": 12,
-                        "y": 12
+                        "x": 9,
+                        "y": 12,
+                        "width": 5,
+                        "height": 4
                       }
                     },
                     {
@@ -5377,10 +4171,10 @@
                           "kind": "ElementReference",
                           "name": "panel-9006"
                         },
-                        "height": 3,
-                        "width": 4,
-                        "x": 16,
-                        "y": 12
+                        "x": 14,
+                        "y": 12,
+                        "width": 5,
+                        "height": 4
                       }
                     },
                     {
@@ -5390,10 +4184,10 @@
                           "kind": "ElementReference",
                           "name": "panel-9007"
                         },
-                        "height": 3,
-                        "width": 4,
-                        "x": 20,
-                        "y": 12
+                        "x": 19,
+                        "y": 12,
+                        "width": 5,
+                        "height": 4
                       }
                     }
                   ]
@@ -5417,10 +4211,10 @@
                           "kind": "ElementReference",
                           "name": "panel-3002"
                         },
-                        "height": 8,
-                        "width": 12,
                         "x": 0,
-                        "y": 0
+                        "y": 0,
+                        "width": 12,
+                        "height": 8
                       }
                     },
                     {
@@ -5430,36 +4224,10 @@
                           "kind": "ElementReference",
                           "name": "panel-3001"
                         },
-                        "height": 4,
-                        "width": 6,
                         "x": 12,
-                        "y": 0
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-3003"
-                        },
-                        "height": 4,
+                        "y": 0,
                         "width": 6,
-                        "x": 18,
-                        "y": 0
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-3004"
-                        },
-                        "height": 4,
-                        "width": 6,
-                        "x": 12,
-                        "y": 4
+                        "height": 4
                       }
                     },
                     {
@@ -5469,10 +4237,23 @@
                           "kind": "ElementReference",
                           "name": "panel-4014"
                         },
-                        "height": 4,
-                        "width": 6,
                         "x": 18,
-                        "y": 4
+                        "y": 0,
+                        "width": 6,
+                        "height": 4
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-3004"
+                        },
+                        "x": 12,
+                        "y": 4,
+                        "width": 12,
+                        "height": 4
                       }
                     }
                   ]
@@ -5494,144 +4275,12 @@
                       "spec": {
                         "element": {
                           "kind": "ElementReference",
-                          "name": "panel-3005"
-                        },
-                        "height": 8,
-                        "width": 12,
-                        "x": 0,
-                        "y": 0
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-3006"
-                        },
-                        "height": 8,
-                        "width": 12,
-                        "x": 12,
-                        "y": 0
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-3007"
-                        },
-                        "height": 6,
-                        "width": 12,
-                        "x": 0,
-                        "y": 8
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-3008"
-                        },
-                        "height": 6,
-                        "width": 12,
-                        "x": 12,
-                        "y": 8
-                      }
-                    }
-                  ]
-                }
-              },
-              "title": "Attestation timing"
-            }
-          },
-          {
-            "kind": "RowsLayoutRow",
-            "spec": {
-              "collapse": true,
-              "layout": {
-                "kind": "GridLayout",
-                "spec": {
-                  "items": [
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-4001"
-                        },
-                        "height": 7,
-                        "width": 12,
-                        "x": 0,
-                        "y": 0
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-4003"
-                        },
-                        "height": 7,
-                        "width": 12,
-                        "x": 12,
-                        "y": 0
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-4002"
-                        },
-                        "height": 6,
-                        "width": 16,
-                        "x": 0,
-                        "y": 7
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-4004"
-                        },
-                        "height": 6,
-                        "width": 8,
-                        "x": 16,
-                        "y": 7
-                      }
-                    }
-                  ]
-                }
-              },
-              "title": "Node and gateway"
-            }
-          },
-          {
-            "kind": "RowsLayoutRow",
-            "spec": {
-              "collapse": true,
-              "layout": {
-                "kind": "GridLayout",
-                "spec": {
-                  "items": [
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
                           "name": "panel-4009"
                         },
-                        "height": 4,
-                        "width": 5,
                         "x": 0,
-                        "y": 0
+                        "y": 0,
+                        "width": 5,
+                        "height": 4
                       }
                     },
                     {
@@ -5641,10 +4290,10 @@
                           "kind": "ElementReference",
                           "name": "panel-4017"
                         },
-                        "height": 4,
-                        "width": 5,
                         "x": 5,
-                        "y": 0
+                        "y": 0,
+                        "width": 5,
+                        "height": 4
                       }
                     },
                     {
@@ -5654,10 +4303,10 @@
                           "kind": "ElementReference",
                           "name": "panel-4010"
                         },
-                        "height": 4,
-                        "width": 5,
                         "x": 10,
-                        "y": 0
+                        "y": 0,
+                        "width": 5,
+                        "height": 4
                       }
                     },
                     {
@@ -5667,10 +4316,10 @@
                           "kind": "ElementReference",
                           "name": "panel-4015"
                         },
-                        "height": 4,
-                        "width": 5,
                         "x": 15,
-                        "y": 0
+                        "y": 0,
+                        "width": 5,
+                        "height": 4
                       }
                     },
                     {
@@ -5680,10 +4329,10 @@
                           "kind": "ElementReference",
                           "name": "panel-4016"
                         },
-                        "height": 4,
-                        "width": 4,
                         "x": 20,
-                        "y": 0
+                        "y": 0,
+                        "width": 4,
+                        "height": 4
                       }
                     }
                   ]
@@ -5705,12 +4354,78 @@
                       "spec": {
                         "element": {
                           "kind": "ElementReference",
+                          "name": "panel-4001"
+                        },
+                        "x": 0,
+                        "y": 0,
+                        "width": 12,
+                        "height": 7
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-4003"
+                        },
+                        "x": 12,
+                        "y": 0,
+                        "width": 12,
+                        "height": 7
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-4002"
+                        },
+                        "x": 0,
+                        "y": 7,
+                        "width": 16,
+                        "height": 6
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-4004"
+                        },
+                        "x": 16,
+                        "y": 7,
+                        "width": 8,
+                        "height": 6
+                      }
+                    }
+                  ]
+                }
+              },
+              "title": "Node and gateway"
+            }
+          },
+          {
+            "kind": "RowsLayoutRow",
+            "spec": {
+              "collapse": true,
+              "layout": {
+                "kind": "GridLayout",
+                "spec": {
+                  "items": [
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
                           "name": "panel-4012"
                         },
-                        "height": 8,
-                        "width": 12,
                         "x": 0,
-                        "y": 0
+                        "y": 0,
+                        "width": 12,
+                        "height": 8
                       }
                     },
                     {
@@ -5720,23 +4435,10 @@
                           "kind": "ElementReference",
                           "name": "panel-3010"
                         },
-                        "height": 4,
-                        "width": 6,
                         "x": 12,
-                        "y": 0
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-3011"
-                        },
-                        "height": 4,
+                        "y": 0,
                         "width": 6,
-                        "x": 18,
-                        "y": 0
+                        "height": 4
                       }
                     },
                     {
@@ -5746,10 +4448,10 @@
                           "kind": "ElementReference",
                           "name": "panel-3012"
                         },
-                        "height": 4,
+                        "x": 18,
+                        "y": 0,
                         "width": 6,
-                        "x": 12,
-                        "y": 4
+                        "height": 4
                       }
                     },
                     {
@@ -5759,10 +4461,10 @@
                           "kind": "ElementReference",
                           "name": "panel-4013"
                         },
-                        "height": 4,
-                        "width": 6,
-                        "x": 18,
-                        "y": 4
+                        "x": 12,
+                        "y": 4,
+                        "width": 12,
+                        "height": 4
                       }
                     }
                   ]
@@ -5784,12 +4486,12 @@
                       "spec": {
                         "element": {
                           "kind": "ElementReference",
-                          "name": "panel-4005"
+                          "name": "panel-3005"
                         },
-                        "height": 7,
-                        "width": 12,
                         "x": 0,
-                        "y": 0
+                        "y": 0,
+                        "width": 12,
+                        "height": 8
                       }
                     },
                     {
@@ -5797,12 +4499,12 @@
                       "spec": {
                         "element": {
                           "kind": "ElementReference",
-                          "name": "panel-4006"
+                          "name": "panel-3006"
                         },
-                        "height": 7,
-                        "width": 12,
                         "x": 12,
-                        "y": 0
+                        "y": 0,
+                        "width": 12,
+                        "height": 8
                       }
                     },
                     {
@@ -5810,12 +4512,25 @@
                       "spec": {
                         "element": {
                           "kind": "ElementReference",
-                          "name": "panel-4008"
+                          "name": "panel-3007"
                         },
-                        "height": 6,
-                        "width": 16,
                         "x": 0,
-                        "y": 7
+                        "y": 8,
+                        "width": 10,
+                        "height": 6
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-3008"
+                        },
+                        "x": 10,
+                        "y": 8,
+                        "width": 10,
+                        "height": 6
                       }
                     },
                     {
@@ -5825,16 +4540,16 @@
                           "kind": "ElementReference",
                           "name": "panel-4007"
                         },
-                        "height": 6,
-                        "width": 8,
-                        "x": 16,
-                        "y": 7
+                        "x": 20,
+                        "y": 8,
+                        "width": 4,
+                        "height": 6
                       }
                     }
                   ]
                 }
               },
-              "title": "Epoch detail"
+              "title": "Attestation timing"
             }
           },
           {
@@ -5852,23 +4567,10 @@
                           "kind": "ElementReference",
                           "name": "panel-3013"
                         },
-                        "height": 7,
-                        "width": 12,
                         "x": 0,
-                        "y": 0
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-3014"
-                        },
-                        "height": 7,
-                        "width": 12,
-                        "x": 12,
-                        "y": 0
+                        "y": 0,
+                        "width": 24,
+                        "height": 7
                       }
                     },
                     {
@@ -5878,36 +4580,10 @@
                           "kind": "ElementReference",
                           "name": "panel-3015"
                         },
-                        "height": 4,
-                        "width": 6,
                         "x": 0,
-                        "y": 7
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-3016"
-                        },
-                        "height": 4,
-                        "width": 6,
-                        "x": 6,
-                        "y": 7
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-3017"
-                        },
-                        "height": 4,
-                        "width": 6,
-                        "x": 12,
-                        "y": 7
+                        "y": 7,
+                        "width": 12,
+                        "height": 4
                       }
                     },
                     {
@@ -5917,10 +4593,10 @@
                           "kind": "ElementReference",
                           "name": "panel-4011"
                         },
-                        "height": 4,
-                        "width": 6,
-                        "x": 18,
-                        "y": 7
+                        "x": 12,
+                        "y": 7,
+                        "width": 12,
+                        "height": 4
                       }
                     }
                   ]
