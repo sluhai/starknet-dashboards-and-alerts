@@ -22,10 +22,6 @@ identifier itself.
 To replace one you already have: open it → `Edit` → the same `{}` icon → select all → paste → `Apply
 changes` → **`Save`**. The dashboard keeps its identifier and its address.
 
-Two things that trip people up. The editor opens with the current dashboard model already in it, so select
-all before pasting; otherwise you end up with two JSON documents in a row and `Apply changes` stays
-disabled. And `Apply changes` only redraws the screen — without `Save` nothing reaches the server.
-
 The title comes from the file. Grafana refuses to create a second dashboard with a title that already
 exists in the same folder, so rename one of them if that happens.
 
